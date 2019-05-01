@@ -18,9 +18,9 @@
 
 ## Number and name of feature: #3 Weather
 * Estimate of time needed to complete __1 Hour__
-* Start time: __9:40__
-* Finish time: __time__
-* Actual time needed to complete: __time__
+* Start time: __9:35__
+* Finish time: __9:50__
+* Actual time needed to complete: __15 minutes__
 
 ## Number and name of feature: #4 Eventbrite
 * Estimate of time needed to complete __time__
