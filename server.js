@@ -34,6 +34,15 @@ function Weather(day) {
   this.time = new Date(day.time * 1000).toDateString();
 }
 
+function Events(data) {
+  let time = Date.parse(data.start.local);
+  let newDate = new Date(time).toDateString();
+  this.link = data.url;
+  this.name = data.name.text;
+  this.event_date = newDate;
+  this.summary = data.summary;
+}
+
 //--------------------------------
 // Route Callbacks
 //--------------------------------
@@ -63,11 +72,26 @@ let searchWeather = (request, response) => {
     .catch(() => errorMessage());
 };
 
+let searchEvents = (request, response) => {
+  let url = `https://www.eventbriteapi.com/v3/events/search?token=${process.env.EVENTBRITE_API_KEY}&location.address=${request.query.data.formatted_query}`;
+
+  return superagent.get(url)
+    .then(result => {
+      const eventData = result.body.events.map(event => {
+        return new Events(event);
+      });
+
+      response.send(eventData);
+    })
+    .catch(() => errorMessage());
+};
+
 //--------------------------------
 // Routes
 //--------------------------------
 app.get('/location', searchCoords);
 app.get('/weather', searchWeather);
+app.get('/events', searchEvents);
 
 //--------------------------------
 // Error Message
@@ -77,6 +101,7 @@ let errorMessage = () => {
     status: 500,
     responseText: 'Sorry something went wrong',
   };
+  console.log(errorObj);
   return errorObj;
 };
 
