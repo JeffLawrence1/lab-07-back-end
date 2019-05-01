@@ -10,6 +10,7 @@ require('dotenv').config();
 //--------------------------------
 const express = require('express');
 const cors = require('cors');
+const superagent = require('superagent');
 
 //--------------------------------
 //Application setup
@@ -23,9 +24,9 @@ app.use(cors());
 //--------------------------------
 function Location(query, geoData) {
   this.search_query = query;
-  this.formatted_query = geoData.results[0].formatted_address;
-  this.latitude = geoData.results[0].geometry.location.lat;
-  this.longitude = geoData.results[0].geometry.location.lng;
+  this.formatted_query = geoData.formatted_address;
+  this.latitude = geoData.geometry.location.lat;
+  this.longitude = geoData.geometry.location.lng;
 }
 
 function Weather(query, weatherData) {
@@ -38,15 +39,20 @@ function Weather(query, weatherData) {
 //--------------------------------
 // Route Callbacks
 //--------------------------------
-let searchCoords = (query) => {
-  const geoData = require('./data/geo.json');
-  const location = new Location(query, geoData);
-  return location;
+let searchCoords = (request, response) => {
+  const data = request.query.data;
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${data}&key=${process.env.GEOCODE_API_KEY}`;
+
+  return superagent.get(url)
+    .then(result => {
+      response.send(new Location(data, result.body.results[0]));
+    })
+    .catch(() => errorMessage());
 };
 
 let searchWeather = (query) => {
   const weatherData = require('./data/darksky.json');
-  const weather = new Weather(searchCoords(query), weatherData);
+  // const weather = new Weather(searchCoords(query), weatherData);
 
   return weather.forecast.map((element) => {
     let myDate = new Date(element.time * 1000).toDateString();
@@ -63,28 +69,30 @@ let searchWeather = (query) => {
 // Routes
 //--------------------------------
 app.get('/weather', (request, response) => {
-  try {
-    const weatherData = searchWeather(request.query.data);
-    response.send(weatherData);
-  }
-  catch(error) {
-    console.error(error);
-    let message = errorMessage();
-    response.status(message.status).send(message.responseText);
-  }
+  // try {
+  //   const weatherData = searchWeather(request.query.data);
+  //   response.send(weatherData);
+  // }
+  // catch(error) {
+  //   console.error(error);
+  //   let message = errorMessage();
+  //   response.status(message.status).send(message.responseText);
+  // }
 });
 
-app.get('/location', (request, response) => {
-  try {
-    const locationData = searchCoords(request.query.data);
-    response.send(locationData);
-  }
-  catch(error) {
-    console.error(error);
-    let message = errorMessage();
-    response.status(message.status).send(message.responseText);
-  }
-});
+// app.get('/location', (request, response) => {
+//   try {
+//     const locationData = searchCoords(request.query.data);
+//     response.send(locationData);
+//   }
+//   catch(error) {
+//     console.error(error);
+//     let message = errorMessage();
+//     response.status(message.status).send(message.responseText);
+//   }
+// });
+
+app.get('/location', searchCoords);
 
 //--------------------------------
 // Error Message
