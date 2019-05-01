@@ -29,11 +29,9 @@ function Location(query, geoData) {
   this.longitude = geoData.geometry.location.lng;
 }
 
-function Weather(query, weatherData) {
-  this.search_query = query;
-  this.latitude = query.latitude;
-  this.longitude = query.longitude;
-  this.forecast = weatherData.daily.data;
+function Weather(day) {
+  this.forecast = day.summary;
+  this.time = new Date(day.time * 1000).toDateString();
 }
 
 //--------------------------------
@@ -50,49 +48,26 @@ let searchCoords = (request, response) => {
     .catch(() => errorMessage());
 };
 
-let searchWeather = (query) => {
-  const weatherData = require('./data/darksky.json');
-  // const weather = new Weather(searchCoords(query), weatherData);
+let searchWeather = (request, response) => {
+  const data = request.query.data;
+  const url = `https://api.darksky.net/forecast/${process.env.WEATHER_API_KEY}/${data.latitude},${data.longitude}`;
 
-  return weather.forecast.map((element) => {
-    let myDate = new Date(element.time * 1000).toDateString();
-    let tempObj = {
-      forecast: element['summary'],
-      time: myDate,
-    };
+  return superagent.get(url)
+    .then(result => {
+      const dailyWeather = result.body.daily.data.map(day => {
+        return new Weather(day);
+      });
 
-    return tempObj;
-  });
+      response.send(dailyWeather);
+    })
+    .catch(() => errorMessage());
 };
 
 //--------------------------------
 // Routes
 //--------------------------------
-app.get('/weather', (request, response) => {
-  // try {
-  //   const weatherData = searchWeather(request.query.data);
-  //   response.send(weatherData);
-  // }
-  // catch(error) {
-  //   console.error(error);
-  //   let message = errorMessage();
-  //   response.status(message.status).send(message.responseText);
-  // }
-});
-
-// app.get('/location', (request, response) => {
-//   try {
-//     const locationData = searchCoords(request.query.data);
-//     response.send(locationData);
-//   }
-//   catch(error) {
-//     console.error(error);
-//     let message = errorMessage();
-//     response.status(message.status).send(message.responseText);
-//   }
-// });
-
 app.get('/location', searchCoords);
+app.get('/weather', searchWeather);
 
 //--------------------------------
 // Error Message
@@ -102,7 +77,6 @@ let errorMessage = () => {
     status: 500,
     responseText: 'Sorry something went wrong',
   };
-  console.log(errorObj);
   return errorObj;
 };
 

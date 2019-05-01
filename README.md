@@ -7,20 +7,20 @@
 ## Number and name of feature: #1 Data Formatting
 * Estimate of time needed to complete: 1 Hour
 * Start time: __8:15__
-* Finish time: __time__
-* Actual time needed to complete: __time__
+* Finish time: __8:30__
+* Actual time needed to complete: __15 minutes__
 
 ## Number and name of feature: #2 Locations
-* Estimate of time needed to complete __time__
-* Start time: __time__
-* Finish time: __time__
-* Actual time needed to complete: __time__
+* Estimate of time needed to complete __1 Hour__
+* Start time: __8:30__
+* Finish time: __9:30__
+* Actual time needed to complete: __1 Hour__
 
 ## Number and name of feature: #3 Weather
-* Estimate of time needed to complete __time__
-* Start time: __time__
-* Finish time: __time__
-* Actual time needed to complete: __time__
+* Estimate of time needed to complete __1 Hour__
+* Start time: __9:35__
+* Finish time: __9:50__
+* Actual time needed to complete: __15 minutes__
 
 ## Number and name of feature: #4 Eventbrite
 * Estimate of time needed to complete __time__
