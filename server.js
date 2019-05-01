@@ -47,18 +47,16 @@ let searchCoords = (query) => {
 let searchWeather = (query) => {
   const weatherData = require('./data/darksky.json');
   const weather = new Weather(searchCoords(query), weatherData);
-  const weatherArr = [];
-  weather.forecast.forEach( (element) => {
-    let myDate = new Date(element.time * 1000);
-    let newDate = myDate.toDateString();
+
+  return weather.forecast.map((element) => {
+    let myDate = new Date(element.time * 1000).toDateString();
     let tempObj = {
       forecast: element['summary'],
-      time: newDate,
+      time: myDate,
     };
-    weatherArr.push(tempObj);
-  });
 
-  return weatherArr;
+    return tempObj;
+  });
 };
 
 //--------------------------------
