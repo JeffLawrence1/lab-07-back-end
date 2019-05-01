@@ -23,14 +23,14 @@
 * Actual time needed to complete: __15 minutes__
 
 ## Number and name of feature: #4 Eventbrite
-* Estimate of time needed to complete __time__
-* Start time: __time__
-* Finish time: __time__
-* Actual time needed to complete: __time__
+* Estimate of time needed to complete __1 Hour__
+* Start time: __9:50__
+* Finish time: __10:50__
+* Actual time needed to complete: __1 Hour__
 
 ## Number and name of feature: #5 Meetups
-* Estimate of time needed to complete __time__
-* Start time: __time__
+* Estimate of time needed to complete __10:50__
+* Start time: __10:50__
 * Finish time: __time__
 * Actual time needed to complete: __time__
 
